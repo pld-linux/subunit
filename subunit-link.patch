@@ -1,0 +1,11 @@
+--- subunit-1.1.0/Makefile.am.orig	2015-03-10 02:03:25.000000000 +0100
++++ subunit-1.1.0/Makefile.am	2015-05-24 10:05:47.508686998 +0200
+@@ -101,6 +101,8 @@
+ 	c++/SubunitTestProgressListener.cpp \
+ 	c++/SubunitTestProgressListener.h
+ 
++libcppunit_subunit_la_LIBADD = libsubunit.la $(CPPUNIT_LIBS)
++
+ tests_LDADD = @CHECK_LIBS@ $(top_builddir)/libsubunit.la
+ c_tests_test_child_CFLAGS = -I$(top_srcdir)/c/include $(SUBUNIT_CFLAGS) @CHECK_CFLAGS@
+ c_tests_test_child_LDADD = $(tests_LDADD)
