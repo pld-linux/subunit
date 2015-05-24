@@ -25,6 +25,7 @@ BuildRequires:	python-devel
 BuildRequires:	rpm-perlprov
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
+BuildRequires:	sed >= 4.0
 Requires:	python-subunit = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -136,6 +137,8 @@ Obsługa protokołu Subunit dla języka Python.
 %prep
 %setup -q
 %patch0 -p1
+
+%{__sed} -i -e '1s,/usr/bin/env python,/usr/bin/python,' filters/*subunit*
 
 %build
 %{__libtoolize}
