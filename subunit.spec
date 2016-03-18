@@ -7,7 +7,7 @@ Summary:	subunit - a streaming protocol for test results
 Summary(pl.UTF-8):	subunit - protokół strumieniowy do wyników testów
 Name:		subunit
 Version:	1.1.0
-Release:	3
+Release:	4
 License:	Apache v2.0 or BSD
 Group:		Libraries
 Source0:	https://github.com/testing-cabal/subunit/archive/%{version}/%{name}-%{version}.tar.gz
