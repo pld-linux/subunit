@@ -1,15 +1,16 @@
 #
 # Conditional build:
 %bcond_without	static_libs	# static libraries
+%bcond_with	python		# python modules/tools [more recent version in python-subunit.spec]
 #
 %include	/usr/lib/rpm/macros.perl
 Summary:	subunit - a streaming protocol for test results
 Summary(pl.UTF-8):	subunit - protokół strumieniowy do wyników testów
 Name:		subunit
 Version:	1.1.0
-Release:	4
+Release:	5
 License:	Apache v2.0 or BSD
-Group:		Libraries
+Group:		Development/Tools
 Source0:	https://github.com/testing-cabal/subunit/archive/%{version}/%{name}-%{version}.tar.gz
 # Source0-md5:	c1d0cf2363a0fcae3714de7ae83923e7
 Patch0:		%{name}-link.patch
@@ -26,7 +27,9 @@ BuildRequires:	rpm-perlprov
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
 BuildRequires:	sed >= 4.0
-Requires:	python-subunit = %{version}-%{release}
+Requires:	%{name}-perl = %{version}-%{release}
+# subpackage or more recent package built from python-subunit.spec
+Requires:	subunit-python >= %{version}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -34,6 +37,32 @@ Subunit is a streaming protocol for test results.
 
 %description -l pl.UTF-8
 Subunit to protokół strumieniowy do wyników testów.
+
+%package perl
+Summary:	Perl tools for Subunit streaming protocol for test results
+Summary(pl.UTF-8):	Perlowe narzędzia dla protokołu strumieniowego do wyników testów Subunit
+Group:		Development/Tools
+Requires:	perl-Subunit = %{version}-%{release}
+
+%description perl
+Perl tools for Subunit streaming protocol for test results.
+
+%description perl -l pl.UTF-8
+Perlowe narzędzia dla protokołu strumieniowego do wyników testów
+Subunit.
+
+%package python
+Summary:	Python tools for Subunit streaming protocol for test results
+Summary(pl.UTF-8):	Pythonowe narzędzia dla protokołu strumieniowego do wyników testów Subunit
+Group:		Development/Tools
+Requires:	python-subunit = %{version}-%{release}
+
+%description python
+Python tools for Subunit streaming protocol for test results.
+
+%description python -l pl.UTF-8
+Pythonowe narzędzia dla protokołu strumieniowego do wyników testów
+Subunit.
 
 %package libs
 Summary:	Subunit shared library
@@ -160,7 +189,16 @@ rm -rf $RPM_BUILD_ROOT
 # obsoleted by pkg-config
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/*.la
 
+%if %{with python}
 %py_postclean
+%else
+# python tools
+%{__rm} $RPM_BUILD_ROOT%{_bindir}/subunit-{1to2,2to1,filter,ls,notify,output,stats,tags}
+%{__rm} $RPM_BUILD_ROOT%{_bindir}/subunit2{csv,gtk,junitxml,pyunit}
+%{__rm} $RPM_BUILD_ROOT%{_bindir}/tap2subunit
+# python modules
+%{__rm} -r $RPM_BUILD_ROOT%{py_sitescriptdir}/subunit
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -174,9 +212,16 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc BSD COPYING NEWS README
+
+%files perl
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/subunit-diff
+
+%if %{with python}
+%files python
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/subunit-1to2
 %attr(755,root,root) %{_bindir}/subunit-2to1
-%attr(755,root,root) %{_bindir}/subunit-diff
 %attr(755,root,root) %{_bindir}/subunit-filter
 %attr(755,root,root) %{_bindir}/subunit-ls
 %attr(755,root,root) %{_bindir}/subunit-notify
@@ -188,6 +233,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/subunit2junitxml
 %attr(755,root,root) %{_bindir}/subunit2pyunit
 %attr(755,root,root) %{_bindir}/tap2subunit
+%endif
 
 %files libs
 %defattr(644,root,root,755)
@@ -231,6 +277,8 @@ rm -rf $RPM_BUILD_ROOT
 %{perl_vendorlib}/Subunit.pm
 %{perl_vendorlib}/Subunit
 
+%if %{with python}
 %files -n python-subunit
 %defattr(644,root,root,755)
 %{py_sitescriptdir}/subunit
+%endif
