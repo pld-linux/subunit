@@ -1,18 +1,19 @@
 #
 # Conditional build:
 %bcond_without	static_libs	# static libraries
-%bcond_with	python		# python modules/tools [more recent version in python-subunit.spec]
+%bcond_with	python		# python modules/tools [in PLD built from (sometimes more recent) python-subunit.spec]
 #
 %include	/usr/lib/rpm/macros.perl
 Summary:	subunit - a streaming protocol for test results
 Summary(pl.UTF-8):	subunit - protokół strumieniowy do wyników testów
 Name:		subunit
-Version:	1.1.0
-Release:	6
+Version:	1.3.0
+Release:	1
 License:	Apache v2.0 or BSD
 Group:		Development/Tools
+#Source0Download: https://github.com/testing-cabal/subunit/releases
 Source0:	https://github.com/testing-cabal/subunit/archive/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	c1d0cf2363a0fcae3714de7ae83923e7
+# Source0-md5:	a290c886d0b7fb1f73659b2096a8ea74
 Patch0:		%{name}-link.patch
 URL:		https://code.launchpad.net/subunit
 BuildRequires:	autoconf >= 2.59
@@ -194,7 +195,7 @@ rm -rf $RPM_BUILD_ROOT
 %else
 # python tools
 %{__rm} $RPM_BUILD_ROOT%{_bindir}/subunit-{1to2,2to1,filter,ls,notify,output,stats,tags}
-%{__rm} $RPM_BUILD_ROOT%{_bindir}/subunit2{csv,gtk,junitxml,pyunit}
+%{__rm} $RPM_BUILD_ROOT%{_bindir}/subunit2{csv,disk,gtk,junitxml,pyunit}
 %{__rm} $RPM_BUILD_ROOT%{_bindir}/tap2subunit
 # python modules
 %{__rm} -r $RPM_BUILD_ROOT%{py_sitescriptdir}/subunit
@@ -211,7 +212,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc BSD COPYING NEWS README
+%doc BSD COPYING NEWS README.rst
 
 %files perl
 %defattr(644,root,root,755)
@@ -229,6 +230,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/subunit-stats
 %attr(755,root,root) %{_bindir}/subunit-tags
 %attr(755,root,root) %{_bindir}/subunit2csv
+%attr(755,root,root) %{_bindir}/subunit2disk
 %attr(755,root,root) %{_bindir}/subunit2gtk
 %attr(755,root,root) %{_bindir}/subunit2junitxml
 %attr(755,root,root) %{_bindir}/subunit2pyunit
