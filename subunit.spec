@@ -3,7 +3,6 @@
 %bcond_without	static_libs	# static libraries
 %bcond_with	python		# python modules/tools [in PLD built from (sometimes more recent) python-subunit.spec]
 #
-%include	/usr/lib/rpm/macros.perl
 Summary:	subunit - a streaming protocol for test results
 Summary(pl.UTF-8):	subunit - protokół strumieniowy do wyników testów
 Name:		subunit
