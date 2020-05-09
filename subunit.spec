@@ -6,13 +6,13 @@
 Summary:	subunit - a streaming protocol for test results
 Summary(pl.UTF-8):	subunit - protokół strumieniowy do wyników testów
 Name:		subunit
-Version:	1.3.0
+Version:	1.4.0
 Release:	1
 License:	Apache v2.0 or BSD
 Group:		Development/Tools
 #Source0Download: https://github.com/testing-cabal/subunit/releases
 Source0:	https://github.com/testing-cabal/subunit/archive/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	a290c886d0b7fb1f73659b2096a8ea74
+# Source0-md5:	562f2a8426a34c1e60c337d731649594
 Patch0:		%{name}-link.patch
 URL:		https://code.launchpad.net/subunit
 BuildRequires:	autoconf >= 2.59
@@ -22,7 +22,7 @@ BuildRequires:	cppunit-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:1.5
 BuildRequires:	pkgconfig
-BuildRequires:	python-devel
+BuildRequires:	python-devel >= 1:2.7
 BuildRequires:	rpm-perlprov
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
