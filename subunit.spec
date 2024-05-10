@@ -6,13 +6,13 @@
 Summary:	subunit - a streaming protocol for test results
 Summary(pl.UTF-8):	subunit - protokół strumieniowy do wyników testów
 Name:		subunit
-Version:	1.4.0
+Version:	1.4.4
 Release:	1
 License:	Apache v2.0 or BSD
 Group:		Development/Tools
 #Source0Download: https://github.com/testing-cabal/subunit/releases
 Source0:	https://github.com/testing-cabal/subunit/archive/%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	562f2a8426a34c1e60c337d731649594
+# Source0-md5:	7b24b01749e7a411c4f054b72081d60a
 Patch0:		%{name}-link.patch
 URL:		https://code.launchpad.net/subunit
 BuildRequires:	autoconf >= 2.59
@@ -22,14 +22,15 @@ BuildRequires:	cppunit-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:1.5
 BuildRequires:	pkgconfig
-BuildRequires:	python-devel >= 1:2.7
-BuildRequires:	rpm-perlprov
+BuildRequires:	python3-devel >= 3.6
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
 BuildRequires:	sed >= 4.0
-Requires:	%{name}-perl = %{version}-%{release}
-# subpackage or more recent package built from python-subunit.spec
+# subpackage or more recent package built from python3-subunit.spec
 Requires:	subunit-python >= %{version}
+# perl support was removed upstream
+Obsoletes:	subunit-perl
+Obsoletes:	perl-Subunit
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -37,19 +38,6 @@ Subunit is a streaming protocol for test results.
 
 %description -l pl.UTF-8
 Subunit to protokół strumieniowy do wyników testów.
-
-%package perl
-Summary:	Perl tools for Subunit streaming protocol for test results
-Summary(pl.UTF-8):	Perlowe narzędzia dla protokołu strumieniowego do wyników testów Subunit
-Group:		Development/Tools
-Requires:	perl-Subunit = %{version}-%{release}
-
-%description perl
-Perl tools for Subunit streaming protocol for test results.
-
-%description perl -l pl.UTF-8
-Perlowe narzędzia dla protokołu strumieniowego do wyników testów
-Subunit.
 
 %package python
 Summary:	Python tools for Subunit streaming protocol for test results
@@ -141,17 +129,6 @@ SubunitTestProgressListener for CPPUnit - static library.
 SubunitTestProgressListener dla biblioteki CPPUnit - biblioteka
 statyczna.
 
-%package -n perl-Subunit
-Summary:	Subunit support for Perl language
-Summary(pl.UTF-8):	Obsługa protokołu Subunit dla języka Perl
-Group:		Development/Languages/Perl
-
-%description -n perl-Subunit
-Subunit support for Perl language.
-
-%description -n perl-Subunit -l pl.UTF-8
-Obsługa protokołu Subunit dla języka Perl.
-
 %package -n python-subunit
 Summary:	Subunit support for Python language
 Summary(pl.UTF-8):	Obsługa protokołu Subunit dla języka Python
@@ -167,7 +144,7 @@ Obsługa protokołu Subunit dla języka Python.
 %setup -q
 %patch0 -p1
 
-%{__sed} -i -e '1s,/usr/bin/env python,/usr/bin/python,' filters/*subunit*
+%{__sed} -i -e '1s,/usr/bin/env python3,%{__python3},' python/subunit/filter_scripts/*subunit*
 
 %build
 %{__libtoolize}
@@ -189,15 +166,9 @@ rm -rf $RPM_BUILD_ROOT
 # obsoleted by pkg-config
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/*.la
 
-%if %{with python}
-%py_postclean
-%else
-# python tools
-%{__rm} $RPM_BUILD_ROOT%{_bindir}/subunit-{1to2,2to1,filter,ls,notify,output,stats,tags}
-%{__rm} $RPM_BUILD_ROOT%{_bindir}/subunit2{csv,disk,gtk,junitxml,pyunit}
-%{__rm} $RPM_BUILD_ROOT%{_bindir}/tap2subunit
+%if ! %{with python}
 # python modules
-%{__rm} -r $RPM_BUILD_ROOT%{py_sitescriptdir}/subunit
+%{__rm} -r $RPM_BUILD_ROOT%{py3_sitescriptdir}/subunit
 %endif
 
 %clean
@@ -212,10 +183,6 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc BSD COPYING NEWS README.rst
-
-%files perl
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/subunit-diff
 
 %if %{with python}
 %files python
@@ -272,11 +239,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir}/libcppunit_subunit.a
 %endif
-
-%files -n perl-Subunit
-%defattr(644,root,root,755)
-%{perl_vendorlib}/Subunit.pm
-%{perl_vendorlib}/Subunit
 
 %if %{with python}
 %files -n python-subunit
